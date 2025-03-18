@@ -1,6 +1,13 @@
 # WeThePeopleAudit
 Project for tracking and scoring government spending at the state level.
 
+# Installation
+## Backend
+Backend package management uses poetry.  In root folder run
+- cd backend/
+- pip install poetry
+- poetry install
+
 # Architecture
 - Ingestion Layer: AWS Lambda, Databricks (Notebooks/Jobs)
 - Storage: AWS S3 (Raw & Processed Data)
@@ -29,6 +36,9 @@ Project for tracking and scoring government spending at the state level.
     -  Also let's you download the budget as a pdf.
 - https://pluralpolicy.com/open/
     - A site which lets you download legislation from numerous states in a unified format.  Might be helpful but haven't looked into it much.
+- https://legiscan.com/MA/datasets
+- https://legiscan.com/MA/legislation/2025?type=bill
+    - This has api and contains all the data we need, go with this.  Cost $25 for one state.
 
 ## Performance
 - State Metrics Data: https://data.mass.gov/
