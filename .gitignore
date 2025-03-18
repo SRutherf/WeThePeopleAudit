@@ -1,9 +1,6 @@
 # version data folder but dont include contents
 data/*
 !data/
-!data/bills/
-!data/performance/
-!data/spending/
 
 # backend folders
 node_modules/
