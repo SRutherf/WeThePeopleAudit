@@ -38,6 +38,7 @@ def get_dataset(session_id, access_key, year, dataset_date):
     :param access_key: The access key provided by getDatasetList
     :param year: Year for the dataset to create the correct directory structure
     :param dataset_date: Date of the dataset to include in filename
+    :return: Zip file with folders for bills, people, and votes
     """
     # Do this so python doesnt use its own bullshit relative path
     script_dir = os.path.dirname(os.path.abspath(__file__))
@@ -85,7 +86,6 @@ def get_dataset(session_id, access_key, year, dataset_date):
     
     return None
 
-# Example Usage
 if __name__ == "__main__":
     datasets = get_dataset_list(state="MA")
     

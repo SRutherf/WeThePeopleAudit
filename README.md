@@ -3,11 +3,18 @@ Project for tracking and scoring government spending at the state level.
 
 # Installation
 ## Backend
-Backend package management uses poetry.  In root folder run
+Backend package management uses pip.  In root folder run
 - cd backend/
-- pip install poetry
-- poetry install
+- pip install -r requirements.txt
 
+Create a .env file in the backend repo and add your own keys.
+```
+LEGISCAN_API_KEY=
+SOCRATA_APP_TOKEN=
+```
+For Legiscan access this link (https://legiscan.com/legiscan) and create an account to generate an API key.  Free tier should be fine.
+
+For Socrata access this link (https://dev.socrata.com/foundry/cthru.data.socrata.com/pegc-naaa) and click on "Sign up for an app token"
 # Architecture
 - Ingestion Layer: AWS Lambda, Databricks (Notebooks/Jobs)
 - Storage: AWS S3 (Raw & Processed Data)
