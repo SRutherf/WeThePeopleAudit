@@ -56,7 +56,7 @@ def get_spending_data(year, month):
     end_date = f"{year}-{month:02d}-{last_day}T23:59:59.999"  # Handles up to 28 days, API should handle overflow
     query = f"budget_fiscal_year={year} AND date >= '{start_date}' AND date <= '{end_date}'"
     
-    retries=3 
+    retries=0 # change this number if you have spotty service and might get network errors 
     delay=5
     offset = 0
     limit = 1000
@@ -109,21 +109,22 @@ def save_data(year, month, data, create_date):
     return file_path
 
 if __name__ == "__main__":
-    year = 2025
+    years = [2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017,2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025]
     try:
         create_date = get_latest_create_date()
         print(f"Latest create_date: {create_date}")
 
-        for month in range(1, 13):
-            if not data_already_downloaded(year, month, create_date):
-                print(f"Fetching data for {year}-{month:02d}")
-                spending_data = get_spending_data(year, month)
-                
-                if spending_data:
-                    save_data(year, month, spending_data, create_date)
+        for year in years:
+            for month in range(1, 13):
+                if not data_already_downloaded(year, month, create_date):
+                    print(f"Fetching data for {year}-{month:02d}")
+                    spending_data = get_spending_data(year, month)
+                    
+                    if spending_data:
+                        save_data(year, month, spending_data, create_date)
+                    else:
+                        print(f"No data retrieved for {year}-{month:02d}. Skipping.")
                 else:
-                    print(f"No data retrieved for {year}-{month:02d}. Skipping.")
-            else:
-                print(f"Data for {year}-{month:02d} already exists. Skipping download.")
+                    print(f"Data for {year}-{month:02d} already exists. Skipping download.")
     except Exception as e:
             print(f"Error occurred: {e}")
