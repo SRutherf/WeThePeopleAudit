@@ -15,7 +15,7 @@ def get_latest_create_date():
     Fetches the latest create_date from the Socrata API.
     :return: Sanitized create_date string or raises an exception if no data is found.
     """
-    client = Socrata("cthru.data.socrata.com", API_KEY, timeout=10)
+    client = Socrata("cthru.data.socrata.com", API_KEY, timeout=60)
     results = client.get("pegc-naaa", limit=1)
     
     if results:
@@ -56,7 +56,7 @@ def get_spending_data(year, month):
     end_date = f"{year}-{month:02d}-{last_day}T23:59:59.999"  # Handles up to 28 days, API should handle overflow
     query = f"budget_fiscal_year={year} AND date >= '{start_date}' AND date <= '{end_date}'"
     
-    retries=0 # change this number if you have spotty service and might get network errors 
+    retries=1 # change this number if you have spotty service and might get network errors 
     delay=5
     offset = 0
     limit = 1000
@@ -65,8 +65,8 @@ def get_spending_data(year, month):
     # Fetch data, break if no results return or we get less than the limit back
     while True:
         for attempt in range(retries):
+            print(f"Attempt {attempt+1} at fetching records")
             try:
-                print(f"Attempt {attempt+1} at fetching records from offset {offset}")
                 results = client.get("pegc-naaa", where=query, offset=offset, limit=limit)
 
                 if results:
@@ -109,7 +109,8 @@ def save_data(year, month, data, create_date):
     return file_path
 
 if __name__ == "__main__":
-    years = [2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017,2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025]
+    # years = [2025, 2024, 2023, 2022, 2021, 2020, 2019, 2018, 2017, 2016, 2015, 2014, 2013, 2012, 2011, 2010]
+    years = [2024, 2023, 2022]
     try:
         create_date = get_latest_create_date()
         print(f"Latest create_date: {create_date}")
