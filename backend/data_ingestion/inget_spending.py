@@ -9,6 +9,7 @@ from dotenv import load_dotenv
 load_dotenv()
 API_KEY = os.getenv("SOCRATA_APP_TOKEN")
 BASE_URL = "https://cthru.data.socrata.com/resource/pegc-naaa.json"
+S3_BUCKET = os.getenv("S3_BUCKET_NAME")
 
 def get_latest_create_date():
     """
@@ -65,7 +66,7 @@ def get_spending_data(year, month):
     # Fetch data, break if no results return or we get less than the limit back
     while True:
         for attempt in range(retries):
-            print(f"Attempt {attempt+1} at fetching records")
+            print(f"Attempt {attempt+1} at fetching records") # TODO fix this so it doesnt spam for every 1000 offset attempt.
             try:
                 results = client.get("pegc-naaa", where=query, offset=offset, limit=limit)
 
@@ -105,12 +106,12 @@ def save_data(year, month, data, create_date):
     with open(file_path, "w", encoding="utf-8") as json_file:
         json.dump(data, json_file, indent=2)
 
-    print(f"Spending data for {year} saved to {file_path}")
+    print(f"Spending data for {year} saved to {file_path}") # TODO add month here
     return file_path
 
 if __name__ == "__main__":
     # years = [2025, 2024, 2023, 2022, 2021, 2020, 2019, 2018, 2017, 2016, 2015, 2014, 2013, 2012, 2011, 2010]
-    years = [2024, 2023, 2022]
+    years = [2024, 2023] # years for the last full general session, #193
     try:
         create_date = get_latest_create_date()
         print(f"Latest create_date: {create_date}")

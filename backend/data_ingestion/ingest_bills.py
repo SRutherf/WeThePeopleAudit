@@ -2,12 +2,23 @@ import os
 import requests
 import json
 import base64
+import boto3
 from dotenv import load_dotenv
 
 # Load API key from .env file
 load_dotenv()
-API_KEY = os.getenv("LEGISCAN_API_KEY")
 BASE_URL = "https://api.legiscan.com/"
+API_KEY = os.getenv("LEGISCAN_API_KEY")
+S3_BUCKET = os.getenv("S3_BUCKET_NAME")
+AWS_ACCESS_KEY = os.getenv("AWS_ACCESS_KEY")
+AWS_SECRET_KEY = os.getenv("AWS_SECRET_KEY")
+
+s3_client = boto3.client(
+    "s3",
+    aws_access_key_id=AWS_ACCESS_KEY,
+    aws_secret_access_key=AWS_SECRET_KEY,
+    region_name="us-east-1"
+)
 
 def get_dataset_list(state=None, year=None):
     """
@@ -31,28 +42,30 @@ def get_dataset_list(state=None, year=None):
         print("Error fetching dataset list:", data)
         return None
 
-def get_dataset(session_id, access_key, year, dataset_date):
+def get_dataset(session_id, access_key, year, dataset_date, storage):
     """
     Downloads a dataset archive for a given session_id.
     :param session_id: The session_id to retrieve
     :param access_key: The access key provided by getDatasetList
     :param year: Year for the dataset to create the correct directory structure
     :param dataset_date: Date of the dataset to include in filename
+    :param stroage: the method for saving the data, either local or hosted on aws.  
     :return: Zip file with folders for bills, people, and votes
     """
-    # Do this so python doesnt use its own bullshit relative path
-    script_dir = os.path.dirname(os.path.abspath(__file__))
-    save_path = os.path.join(script_dir, "..", "..", "data", "bills")
-
-    year_save_path = os.path.join(save_path, str(year))
-    os.makedirs(year_save_path, exist_ok=True)
-
     sanitized_date = dataset_date.replace("-", "")
-    file_path = os.path.join(year_save_path, f"dataset_{session_id}_{year}_{sanitized_date}.zip")
-
-    if os.path.exists(file_path):
-        print(f"Dataset {session_id} for {year} on {dataset_date} already exists. Skipping download.")
-        return None
+    file_name = f"dataset_{session_id}_{year}_{sanitized_date}.zip"
+    
+    if storage == "local":
+        script_dir = os.path.dirname(os.path.abspath(__file__))
+        save_path = os.path.join(script_dir, "..", "..", "data", "bills", str(year))
+        os.makedirs(save_path, exist_ok=True)
+        file_path = os.path.join(save_path, file_name)
+        
+        if os.path.exists(file_path):
+            print(f"Dataset {session_id} for {year} on {dataset_date} already exists. Skipping download.")
+            return None
+    else:
+        file_path = file_name
     
     params = {
         "key": API_KEY,
@@ -74,10 +87,14 @@ def get_dataset(session_id, access_key, year, dataset_date):
                 print(f"Error decoding base64 dataset: {e}")
                 return None
             
-            with open(file_path, "wb") as f:
-                f.write(dataset_zip)
-            
-            print(f"Dataset {session_id} saved to {file_path}")
+            if storage == "local":
+                with open(file_path, "wb") as f:
+                    f.write(dataset_zip)
+                print(f"Dataset {session_id} saved to {file_path}")
+            elif storage == "s3":
+                s3_key = f"bills/{year}/{file_name}"
+                s3_client.put_object(Bucket=S3_BUCKET, Key=s3_key, Body=dataset_zip)
+                print(f"Dataset {session_id} uploaded to s3://{S3_BUCKET}/{s3_key}")
             return file_path
         else:
             print("Error: 'zip' key missing or invalid inside 'dataset'.")
@@ -104,4 +121,5 @@ if __name__ == "__main__":
             access_key = dataset["access_key"]
             year = dataset["year_start"]
             dataset_date = dataset["dataset_date"]
-            get_dataset(session_id, access_key, year, dataset_date)
+            storage="s3" # change to s3 or local depending on where you want to save the dataset
+            get_dataset(session_id, access_key, year, dataset_date, storage)
