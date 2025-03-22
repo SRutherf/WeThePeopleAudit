@@ -131,10 +131,9 @@ def save_data(year, month, data, create_date, storage):
 if __name__ == "__main__":
     # years = [2025, 2024, 2023, 2022, 2021, 2020, 2019, 2018, 2017, 2016, 2015, 2014, 2013, 2012, 2011, 2010] # all years available from scrota
     years = [2024, 2023] # years for the last full general session, #193
-    # years = [2022, 2021, 2020, 2019, 2018, 2017, 2016, 2015, 2014, 2013, 2012, 2011, 2010]
     try:
         create_date = get_latest_create_date()
-        storage = "s3" # change to s3 or local depending on where you want to save the dataset
+        storage = "local" # change to s3 or local depending on where you want to save the dataset
         print(f"Latest create_date: {create_date}")
 
         for year in years:
