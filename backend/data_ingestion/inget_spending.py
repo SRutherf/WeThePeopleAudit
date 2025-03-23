@@ -17,7 +17,7 @@ def get_latest_create_date():
     """
     client = Socrata("cthru.data.socrata.com", API_KEY, timeout=10)
     results = client.get("pegc-naaa", limit=1)
-    
+
     if results:
         date = results[0]["create_date"]
         sanitized_date = date.replace(":", "").replace(" ", "_").replace("-", "")
@@ -36,7 +36,7 @@ def data_already_downloaded(year, month, create_date):
     script_dir = os.path.dirname(os.path.abspath(__file__))
     save_path = os.path.join(script_dir, "..", "..", "data", "spending")
     year_save_path = os.path.join(save_path, str(year))
-    
+
     expected_filename = f"dataset_{year}_{month:02d}_{create_date}.json"
     expected_file_path = os.path.join(year_save_path, expected_filename)
 
@@ -55,8 +55,8 @@ def get_spending_data(year, month):
     last_day = calendar.monthrange(year, month)[1]
     end_date = f"{year}-{month:02d}-{last_day}T23:59:59.999"  # Handles up to 28 days, API should handle overflow
     query = f"budget_fiscal_year={year} AND date >= '{start_date}' AND date <= '{end_date}'"
-    
-    retries=3 
+
+    retries=3
     delay=5
     offset = 0
     limit = 1000
@@ -74,9 +74,9 @@ def get_spending_data(year, month):
 
                     if len(results) < limit:
                         return all_results
-                    
+
                     offset += limit  # Fetch next batch
-                    break 
+                    break
                 else:
                     print(f"No data found in attempt {attempt+1}. Retrying...")
                     time.sleep(delay)
@@ -101,7 +101,7 @@ def save_data(year, month, data, create_date):
     os.makedirs(year_save_path, exist_ok=True)
 
     file_path = os.path.join(year_save_path, f"dataset_{year}_{month:02d}_{create_date}.json")
-    
+
     with open(file_path, "w", encoding="utf-8") as json_file:
         json.dump(data, json_file, indent=2)
 
@@ -118,7 +118,7 @@ if __name__ == "__main__":
             if not data_already_downloaded(year, month, create_date):
                 print(f"Fetching data for {year}-{month:02d}")
                 spending_data = get_spending_data(year, month)
-                
+
                 if spending_data:
                     save_data(year, month, spending_data, create_date)
                 else:
