@@ -7,10 +7,14 @@ Backend package management uses pip.  In root folder run
 - cd backend/
 - pip install -r requirements.txt
 
-Create a .env file in the backend repo and add your own keys.
+Create a .env file in the backend repo and add your own keys.  Non secret values can be included in the list below.  Ask Steven R. for the aws keys.
 ```
 LEGISCAN_API_KEY=
 SOCRATA_APP_TOKEN=
+
+S3_BUCKET_NAME=wtpaudit
+AWS_ACCESS_KEY_ID=A
+AWS_SECRET_ACCESS_KEY=
 ```
 For Legiscan access this link (https://legiscan.com/legiscan) and create an account to generate an API key.  Free tier should be fine.
 
