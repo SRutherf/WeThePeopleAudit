@@ -1,8 +1,8 @@
-import time
-import os
-import json
-import calendar
 import boto3
+import calendar
+import json
+import os
+import time
 from sodapy import Socrata
 from dotenv import load_dotenv
 
@@ -14,7 +14,12 @@ S3_BUCKET = os.getenv("S3_BUCKET_NAME")
 AWS_ACCESS_KEY = os.getenv("AWS_ACCESS_KEY")
 AWS_SECRET_KEY = os.getenv("AWS_SECRET_KEY")
 
-s3_client = boto3.client("s3")
+s3_client = boto3.client(
+    "s3",
+    aws_access_key_id=AWS_ACCESS_KEY,
+    aws_secret_access_key=AWS_SECRET_KEY,
+    region_name="us-east-2"
+)
 
 def get_latest_create_date():
     """
