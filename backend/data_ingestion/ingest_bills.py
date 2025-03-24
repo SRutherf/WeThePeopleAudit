@@ -1,8 +1,9 @@
-import os
-import requests
-import json
+
 import base64
 import boto3
+import json
+import os
+import requests
 from dotenv import load_dotenv
 
 # Load API key from .env file
@@ -17,7 +18,7 @@ s3_client = boto3.client(
     "s3",
     aws_access_key_id=AWS_ACCESS_KEY,
     aws_secret_access_key=AWS_SECRET_KEY,
-    region_name="us-east-1"
+    region_name="us-east-2"
 )
 
 def get_dataset_list(state=None, year=None):
@@ -121,5 +122,5 @@ if __name__ == "__main__":
             access_key = dataset["access_key"]
             year = dataset["year_start"]
             dataset_date = dataset["dataset_date"]
-            storage="s3" # change to s3 or local depending on where you want to save the dataset
+            storage="local" # change to s3 or local depending on where you want to save the dataset
             get_dataset(session_id, access_key, year, dataset_date, storage)
