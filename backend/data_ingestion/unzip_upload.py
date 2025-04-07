@@ -1,4 +1,5 @@
 import boto3
+import json
 import os
 import zipfile
 from dotenv import load_dotenv
@@ -12,7 +13,7 @@ s3_client = boto3.client(
     "s3",
     aws_access_key_id=AWS_ACCESS_KEY,
     aws_secret_access_key=AWS_SECRET_KEY,
-    region_name="us-east-2"
+    region_name="us-east-1"
 )
 
 def extract_all_zip_files(directory):
@@ -31,6 +32,31 @@ def extract_all_zip_files(directory):
 
                 print(f"Extracted {zip_path} to {extract_path}")
                 upload_to_s3(extract_path)
+
+def prep_data_for_databricks(folder, filepath):
+    key_mapping = {
+        "bill": "bill",
+        "people": "person",
+        "vote": "roll_call"
+    }
+    key = key_mapping.get(folder)
+
+    try:
+        with open(filepath, 'r') as f:
+            data = json.load(f)
+    except json.JSONDecodeError as e:
+        print(f"Error decoding JSON from {filepath}: {e}")
+        return False
+    if key not in data:
+        print(f"Expected key '{key}' not found in {filepath}.  Should exist in unzipped data.")
+        return False
+    
+    inner_data = data[key]
+
+    with open(filepath, 'w') as f:
+        json.dump(inner_data, f)
+    
+    return True
 
 def upload_to_s3(extract_path):
     """
@@ -53,12 +79,13 @@ def upload_to_s3(extract_path):
                     for json_file in os.listdir(folder_path):
                         if json_file.endswith(".json"):
                             file_path = os.path.join(folder_path, json_file)
-                            s3_key = f"{s3_key_base_path}/{folder}/{json_file}"
+                            should_upload = prep_data_for_databricks(folder, file_path)
+                            if should_upload:
+                                s3_key = f"{s3_key_base_path}/{folder}/{json_file}"
+                                s3_client.upload_file(file_path, S3_BUCKET, s3_key)
+                                print(f"Uploaded {file_path} to s3://{S3_BUCKET}/{s3_key}")             
 
-                            s3_client.upload_file(file_path, S3_BUCKET, s3_key)
-                            print(f"Uploaded {file_path} to s3://{S3_BUCKET}/{s3_key}")             
-
-if __name__ == "__main__":
+def main():
     # Define the directory containing the zip files
     bills_directory = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "data", "bills")
 
