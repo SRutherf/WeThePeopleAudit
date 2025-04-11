@@ -6,7 +6,6 @@ import time
 from sodapy import Socrata
 from dotenv import load_dotenv
 
-# Load API key from .env file
 load_dotenv()
 BASE_URL = "https://cthru.data.socrata.com/resource/pegc-naaa.json"
 API_KEY = os.getenv("SOCRATA_APP_TOKEN")
@@ -18,7 +17,7 @@ s3_client = boto3.client(
     "s3",
     aws_access_key_id=AWS_ACCESS_KEY,
     aws_secret_access_key=AWS_SECRET_KEY,
-    region_name="us-east-2"
+    region_name="us-east-1"
 )
 
 def get_latest_create_date():
@@ -133,12 +132,11 @@ def save_data(year, month, data, create_date, storage):
     else:
         print("Invalid storage option, dummy.")
 
-if __name__ == "__main__":
-    # years = [2025, 2024, 2023, 2022, 2021, 2020, 2019, 2018, 2017, 2016, 2015, 2014, 2013, 2012, 2011, 2010] # all years available from scrota
-    years = [2024, 2023] # years for the last full general session, #193
+def main(years, storage):
+    # [2025, 2024, 2023, 2022, 2021, 2020, 2019, 2018, 2017, 2016, 2015, 2014, 2013, 2012, 2011, 2010] # all years available from scrota
+    # [2024, 2023] # years for the last full general session, #193
     try:
         create_date = get_latest_create_date()
-        storage = "local" # change to s3 or local depending on where you want to save the dataset
         print(f"Latest create_date: {create_date}")
 
         for year in years:

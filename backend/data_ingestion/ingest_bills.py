@@ -6,7 +6,6 @@ import os
 import requests
 from dotenv import load_dotenv
 
-# Load API key from .env file
 load_dotenv()
 BASE_URL = "https://api.legiscan.com/"
 API_KEY = os.getenv("LEGISCAN_API_KEY")
@@ -18,10 +17,10 @@ s3_client = boto3.client(
     "s3",
     aws_access_key_id=AWS_ACCESS_KEY,
     aws_secret_access_key=AWS_SECRET_KEY,
-    region_name="us-east-2"
+    region_name="us-east-1"
 )
 
-def get_dataset_list(state=None, year=None):
+def get_dataset_list(year=None, state=None):
     """
     Fetches the list of available session datasets.
     :param state: (Optional) Filter results by state abbreviation (e.g. 'MA')
@@ -43,7 +42,7 @@ def get_dataset_list(state=None, year=None):
         print("Error fetching dataset list:", data)
         return None
 
-def get_dataset(session_id, access_key, year, dataset_date, storage):
+def get_dataset(session_id, access_key, dataset_date, year, storage):
     """
     Downloads a dataset archive for a given session_id.
     :param session_id: The session_id to retrieve
@@ -104,8 +103,8 @@ def get_dataset(session_id, access_key, year, dataset_date, storage):
     
     return None
 
-if __name__ == "__main__":
-    datasets = get_dataset_list(state="MA")
+def main(year, state, storage):
+    datasets = get_dataset_list(year=year, state=state)
     
     if datasets:
         for dataset in datasets:
@@ -122,5 +121,4 @@ if __name__ == "__main__":
             access_key = dataset["access_key"]
             year = dataset["year_start"]
             dataset_date = dataset["dataset_date"]
-            storage="local" # change to s3 or local depending on where you want to save the dataset
-            get_dataset(session_id, access_key, year, dataset_date, storage)
+            get_dataset(session_id, access_key, dataset_date, year=year, storage=storage)
