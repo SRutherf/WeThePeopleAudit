@@ -1,6 +1,8 @@
 import ingest_bills
+import ingest_performance
 import ingest_spending
-import unzip_upload
+import upload_to_s3
+import backend.data_processing.unzip_process_bill_data as unzip_process_bill_data
 
 ###
 # year = 2025
@@ -10,19 +12,20 @@ import unzip_upload
 ###
 def bills():
     ingest_bills.main(year=2025, state="MA", storage="local")
-    unzip_upload.main()
+    unzip_process_bill_data.main()
 
 def peformance():
-    print("TODO: Implement performance ingestion")
+    ingest_performance.main(states=["geoId/25"])
 
 def spending():
-    ingest_spending.main(years=[2024, 2023], state="MA", storage="s3")
+    ingest_spending.main(years=[2024, 2023], state="MA", storage="local")
 
 if __name__ == "__main__":
-    unzip_upload.main()
-    # print("Starting bill ingestion...")
-    # bills()
-    # print("Starting performance ingestion...")
-    # peformance()
-    # print("Starting spending ingestion...")
-    # spending
+    print("Starting bill ingestion...")
+    bills()
+    print("Starting performance ingestion...")
+    peformance()
+    print("Starting spending ingestion...")
+    spending
+    print("Uploading to S3...")
+    upload_to_s3.main()

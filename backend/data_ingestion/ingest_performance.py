@@ -231,9 +231,7 @@ def save_state_perf_data_to_file(performance_data, states):
         
         print(f"Saved state data to {full_path}")
 
-if __name__ == "__main__":
-    # states = dc.get_places_in(['country/USA'], 'State')['country/USA']
-    states = ['geoId/25'] # Massachusetts
+def main(states):
     data = fetch_state_data(states)
     geo_data, performance_data = enrich_with_labels_and_types(data)
     save_state_geo_data_to_file(geo_data, states)
