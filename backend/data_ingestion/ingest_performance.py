@@ -202,7 +202,7 @@ def save_state_geo_data_to_file(geo_data, states):
         state_abbr = abbrs.get(state_id)[0]
 
         script_dir = os.path.dirname(os.path.abspath(__file__))
-        save_path = os.path.join(script_dir, "..", "..", "data", "performance", "states")
+        save_path = os.path.join(script_dir, "..", "..", "data", "performance", "states_raw")
         
         filename = f"{state_abbr.lower()}_geo_data.json"
         full_path = os.path.join(save_path, filename)
@@ -221,7 +221,7 @@ def save_state_perf_data_to_file(performance_data, states):
         state_abbr = abbrs.get(state_id)[0]
 
         script_dir = os.path.dirname(os.path.abspath(__file__))
-        save_path = os.path.join(script_dir, "..", "..", "data", "performance", "states")
+        save_path = os.path.join(script_dir, "..", "..", "data", "performance", "states_raw")
         
         filename = f"{state_abbr.lower()}_perf_data.json"
         full_path = os.path.join(save_path, filename)
