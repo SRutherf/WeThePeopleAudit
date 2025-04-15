@@ -4,17 +4,20 @@
     box-sizing: border-box;
     font-family: Arial, sans-serif;
 }
+
 body {
     line-height: 1.6;
     color: white;
     background-color: #003d73;
 }
+
 .container {
     width: 90%;
     max-width: 1200px;
     margin: 0 auto;
     padding: 20px;
 }
+
 header {
     background-color: #003d73;
     color: white;
@@ -32,52 +35,58 @@ header h1 {
     margin-bottom: 20px;
     color: white;
 }
+
 main {
     padding: 40px 0;
 }
+
 #tableau-container {
     display: flex;
     flex-direction: column;
-    justify-content: flex-start;
+    justify-content: center;
     align-items: center;
-    padding: 20px;
-    min-height: 100vh;
+    padding: 0;
+    margin: 0;
+    width: 100%;
+    height: 100vh;
     background-color: #003d73;
 }
-#tableau-container h2 {
-    margin-bottom: 20px;
-    text-align: center;
-    color: #f1c232;
+.tableauPlaceholder {
+    width: 100%;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.tableauPlaceholder object {
+    width: 100%;
+    height: 100%;
 }
 #tableau-viz {
     width: 100%;
-    max-width: 1200px;
-    flex-grow: 1;
-    height: 80vh;
+    height: 90vh;
     border: 2px solid #f1c232;
     border-radius: 10px;
-    margin-bottom: 20px;
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
     background-color: #f5f5f5;
     display: flex;
     align-items: center;
     justify-content: center;
+    margin: 0;
+    padding: 0;
 }
-#tableau-viz p {
-    color: #003d73;
-}
+
 #text-container {
     width: 100%;
-    display: flex;
-    justify-content: center;
-    margin-bottom: 20px;
-}
-#text-container p {
-    color: white;
-    font-size: 18px;
-    font-family: Arial, sans-serif;
     text-align: center;
+    margin-top: 10px;
+    color: white;
 }
+
+#buttons-container {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+}
+
 #download-btn, #download-btn2 {
     background-color: #f1c232;
     color: #003d73;
@@ -88,13 +97,11 @@ main {
     cursor: pointer;
     transition: background-color 0.5s ease;
 }
-#download-btn:hover {
+
+#download-btn:hover, #download-btn2:hover {
     background-color: #e1b000;
 }
-#download-btn:disabled {
-    background-color: #d3d3d3;
-    cursor: not-allowed;
-}
+
 #about-section {
     background-color: rgba(255, 255, 255, 0.1);
     border-radius: 10px;
@@ -102,20 +109,7 @@ main {
     margin-bottom: 40px;
     border: 1px solid #f1c232;
 }
+
 #about-section h2 {
-    color: #f1c232; /
-    margin-bottom: 20px;
-}
-footer {
-    background-color: #002b50;
-    color: white;
-    text-align: center;
-    padding: 20px 0;
-    margin-top: 40px;
-    border-top: 2px solid #f1c232;
-}
-.footer-content {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+    color: #f1c232;
 }
