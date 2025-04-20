@@ -20,6 +20,9 @@ def peformance():
 def spending():
     ingest_spending.main(years=[2024, 2023], state="MA", storage="local")
 
+def upload():
+    upload_to_s3.main()
+
 if __name__ == "__main__":
     print("Starting bill ingestion...")
     bills()
@@ -28,4 +31,3 @@ if __name__ == "__main__":
     print("Starting spending ingestion...")
     spending
     print("Uploading to S3...")
-    upload_to_s3.main()
