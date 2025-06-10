@@ -1,6 +1,14 @@
 # WeThePeopleAudit
 Project for tracking and scoring government spending at the state level.
 
+The main idea is that for each line item spending a state has spent, we will find ways to link it with the specific legislation/bill/initiative that pushed for it.
+
+Given this additional bill context we can then compare it to state performance metrics to determine how effective the spending has been.
+
+This will then allow us to score politicians on their spending habits/efficiency.
+
+This processed data will then be displayed on an interactive front end which users can interact with.  It will display the spending, where it went, where it came from and also show the politicians who pushed for it and some of their patterns, such as which politicians work together, which parties spend the most effectively, etc...
+
 # Installation
 ## Backend
 Backend package management uses pip.  In root folder run

@@ -103,22 +103,23 @@ def get_dataset(session_id, access_key, dataset_date, year, storage):
     
     return None
 
-def main(year, state, storage):
-    datasets = get_dataset_list(year=year, state=state)
-    
-    if datasets:
-        for dataset in datasets:
-            print(json.dumps({
-                "session_name": dataset.get("session_name"),
-                "dataset_date": dataset.get("dataset_date"),
-                "session_id": dataset.get("session_id"),
-                "access_key": dataset.get("access_key")
-            }, indent=2))
+def main(years, state, storage):
+    for year in years:
+        datasets = get_dataset_list(year=year, state=state)
+        
+        if datasets:
+            for dataset in datasets:
+                print(json.dumps({
+                    "session_name": dataset.get("session_name"),
+                    "dataset_date": dataset.get("dataset_date"),
+                    "session_id": dataset.get("session_id"),
+                    "access_key": dataset.get("access_key")
+                }, indent=2))
 
-        # Download all datasets
-        for dataset in datasets:
-            session_id = dataset["session_id"]
-            access_key = dataset["access_key"]
-            year = dataset["year_start"]
-            dataset_date = dataset["dataset_date"]
-            get_dataset(session_id, access_key, dataset_date, year=year, storage=storage)
+            # Download all datasets
+            for dataset in datasets:
+                session_id = dataset["session_id"]
+                access_key = dataset["access_key"]
+                year = dataset["year_start"]
+                dataset_date = dataset["dataset_date"]
+                get_dataset(session_id, access_key, dataset_date, year=year, storage=storage)

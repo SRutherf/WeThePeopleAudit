@@ -188,8 +188,72 @@ def enrich_with_labels_and_types(data):
     #Fetch stat_vars
     print("Fetching performance data")
     stat_vars = [
-        'Median_Income_Household', 'UnemploymentRate_Person',
-        'Percent_Person_Obesity', 'Percent_Person_Smoking'
+        # Economics
+        "Median_Income_Household",
+        "UnemploymentRate_Person",
+        "Count_Person_BelowPovertyLevel_Percent",
+        "LaborForceParticipationRate_Person",
+        "Count_Employment_HealthCareAndSocialAssistance",
+
+        # Healthcare
+        "Percent_Person_Obesity",
+        "Percent_Person_Smoking",
+        "Count_Person_HealthInsuranceCoverage_Any",
+        "Expenditure_Health_Care_PerCapita",
+        "Count_Physician_Practicing",
+        "Count_HospitalBed",
+        "Count_Person_MedicaidEnrolled_PerCapita",
+        "Percent_Person_WithSeriousMentalIllness",
+
+        # Education & Workforce
+        "Percent_Person_HighSchoolGraduate",
+        "Percent_Person_BachelorDegree",
+        "Count_Person_CollegeEnrollment",
+        "Percent_Person_LessThanHighSchool",
+        "Expenditure_Education_PublicSchools_PerPupil",
+        "Count_Person_StudentTeacherRatio",
+
+        # Family
+        "Percent_Household_SingleParent",
+        "Count_Child_Enrollment_ChildCare",
+        "Expenditure_ChildCare_PerCapita",
+
+        # Housing/Homelessness
+        "Median_Rent_Monthly",
+        "Percent_Household_OwnerOccupied",
+        "Percent_Household_Overcrowded",
+        "Count_Person_Homeless",
+
+        # Transportation/Infastructure
+        "Percent_Worker_CommutePublicTransportation",
+        "Percent_Worker_BikeToWork",
+        "Percent_Worker_WalkToWork",
+        "Mean_TravelTime_Work",
+
+        # Energy/Environment
+        "Expenditure_Energy_PerCapita",
+        "Percent_Household_WithElectricity",
+        "WUSTL_Avg_PM25",
+
+        # Justice
+        "Count_Crime_Violent",
+        "Count_Crime_Property",
+        "Rate_TrafficFatalities",
+        "Count_Person_Incarcerated",
+
+        # Demographics
+        "Percent_Person_BelowPovertyLevel_Child",
+        "Percent_Person_BelowPovertyLevel_Age65Plus",
+        "Percent_Person_WithDisability",
+
+        # Race
+        "Median_Income_Household_BlackOrAfricanAmericanAlone",
+        "Median_Income_Household_WhiteAlone",
+        "Median_Income_Household_HispanicOrLatino",
+        "Median_Income_Household_AsianAlone",
+        "Percent_Person_BachelorDegree_BlackOrAfricanAmericanAlone",
+        "Percent_Person_BachelorDegree_WhiteAlone",
+        "Percent_Person_BachelorDegree_HispanicOrLatino"
     ]
     performance_data = fetch_stat_vars(dcids, stat_vars)
 

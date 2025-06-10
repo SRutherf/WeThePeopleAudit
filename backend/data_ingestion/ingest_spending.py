@@ -19,15 +19,15 @@ s3_client = boto3.client(
     aws_secret_access_key=AWS_SECRET_KEY,
     region_name="us-east-1"
 )
+socrata_client = Socrata("cthru.data.socrata.com", API_KEY, timeout=60)
 
 def get_latest_create_date():
     """
     Fetches the latest create_date from the Socrata API.
     :return: Sanitized create_date string or raises an exception if no data is found.
     """
-    client = Socrata("cthru.data.socrata.com", API_KEY, timeout=60)
-    results = client.get("pegc-naaa", limit=1)
-    
+    results = socrata_client.get("pegc-naaa", limit=1)
+
     if results:
         date = results[0]["create_date"]
         sanitized_date = date.replace(":", "").replace(" ", "_").replace("-", "")
@@ -54,20 +54,18 @@ def data_already_downloaded(year, month, create_date):
 
 def get_spending_data(year, month):
     """
-    Fetches government spending data for a given state and year using Socrata API.
+    Fetches government spending data for a given month and year using Socrata API.
     :param year: Year for filtering spending data
     :param month: Month for filtering spending data
     :return: JSON of spending records
     """
-    client = Socrata("cthru.data.socrata.com", API_KEY, timeout=60)
-
     start_date = f"{year}-{month:02d}-01T00:00:00.000"
     last_day = calendar.monthrange(year, month)[1]
     end_date = f"{year}-{month:02d}-{last_day}T23:59:59.999"  # Handles up to 28 days, API should handle overflow
     query = f"budget_fiscal_year={year} AND date >= '{start_date}' AND date <= '{end_date}'"
     
-    retries=1 # change this number if you have spotty service and might get network errors 
-    delay=5
+    retries = 1 # change this number if you have spotty service and might get network errors 
+    delay = 5
     offset = 0
     limit = 1000
     all_results = []
@@ -78,7 +76,7 @@ def get_spending_data(year, month):
         for attempt in range(retries):
             # print(f"Getting data for offset {offset}") # uncomment for progress logs if you're interested
             try:
-                results = client.get("pegc-naaa", where=query, offset=offset, limit=limit)
+                results = socrata_client.get("pegc-naaa", where=query, offset=offset, limit=limit)
 
                 if results:
                     all_results.extend(results)
